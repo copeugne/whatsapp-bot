@@ -1,0 +1,1027 @@
+# 1. BIG TECH / FAANG+
+Alphabet / Google
+Apple
+Microsoft
+Amazon
+Meta Platforms
+Salesforce
+Oracle
+IBM
+SAP
+Adobe
+Palantir Technologies
+Uber
+Airbnb
+Booking Holdings
+
+# 2. ASIAN TECH GIANTS
+Samsung Electronics
+Tencent
+Alibaba
+ByteDance
+Baidu
+Huawei
+Xiaomi
+Sony Group
+Nintendo
+SoftBank Group
+Reliance Jio
+Infosys
+Grab
+Sea Limited
+NAVER
+
+# Foundation Model Companies
+OpenAI
+Anthropic
+Google DeepMind
+xAI
+Meta AI (FAIR)
+Mistral AI
+Cohere
+DeepSeek
+AI21 Labs
+Stability AI
+
+# AI Infrastructure & Applied AI
+Databricks
+Anysphere (Cursor)
+Perplexity AI
+Scale AI
+CoreWeave
+Together AI
+Hugging Face
+Glean
+Harvey AI
+Sierra AI
+Synthesia
+Runway
+
+# Robotics & Autonomous Systems
+Boston Dynamics
+Figure AI
+Waymo
+Zoox
+Agility Robotics
+
+# 4. SEMICONDUCTORS & HARDWARE
+NVIDIA
+AMD
+Intel
+TSMC
+Broadcom
+ASML
+Qualcomm
+Arm Holdings
+Micron Technology
+SK Hynix
+Applied Materials
+Lam Research
+KLA Corporation
+Marvell Technology
+Analog Devices
+Texas Instruments
+ON Semiconductor
+MediaTek
+Synopsys
+Cadence Design Systems
+GlobalFoundries
+Wolfspeed
+Infineon Technologies
+STMicroelectronics
+NXP Semiconductors
+Renesas Electronics
+Tokyo Electron
+
+# 5. CYBERSECURITY
+Palo Alto Networks
+CrowdStrike
+Fortinet
+Zscaler
+Cloudflare
+SentinelOne
+Check Point Software
+CyberArk
+Wiz
+
+# 6. ENTERPRISE SOFTWARE / SAAS
+ServiceNow
+Snowflake
+Workday
+Datadog
+Atlassian
+HubSpot
+Shopify
+Twilio
+MongoDB
+Elastic
+Confluent
+HashiCorp
+Canva
+Notion
+Figma
+Airtable
+Vercel
+GitLab
+GitHub
+LinkedIn
+Slack
+Red Hat
+VMware
+Intuit
+Zoom
+
+# 7. FINTECH
+Stripe
+Ant Group (Alipay)
+Revolut
+Nubank
+Klarna
+Wise (TransferWise)
+Plaid
+Brex
+Adyen
+Chime
+SoFi
+Ramp
+Coinbase
+Robinhood
+Affirm
+Rippling
+Deel
+PayPal
+Block (Square/Cash App)
+Marqeta
+Toast
+
+# 8. GAMING
+Riot Games
+Valve
+Rockstar Games
+Blizzard Entertainment
+Epic Games
+Naughty Dog
+Santa Monica Studio
+Ubisoft
+Electronic Arts (EA)
+CD Projekt Red
+miHoYo / HoYoverse
+FromSoftware
+Insomniac Games
+Supercell
+Garena
+
+# 9. QUANTUM COMPUTING
+IonQ
+Rigetti Computing
+D-Wave
+Quantinuum
+QuEra
+PsiQuantum
+
+# 10. INVESTMENT BANKING -- BULGE BRACKET
+Goldman Sachs
+JPMorgan Chase
+Morgan Stanley
+Bank of America (BofA Securities)
+Citigroup
+Barclays
+UBS
+Deutsche Bank
+HSBC
+BNP Paribas
+Nomura
+Societe Generale
+Mizuho
+
+# 11. INVESTMENT BANKING -- ELITE BOUTIQUES
+Evercore
+Lazard
+Centerview Partners
+PJT Partners
+Moelis & Company
+Perella Weinberg Partners
+Guggenheim Securities
+Qatalyst Partners
+LionTree
+Allen & Company
+Rothschild & Co
+Greenhill & Co
+PJ Solomon
+
+# 12. INVESTMENT BANKING -- MIDDLE MARKET
+Jefferies
+Houlihan Lokey
+William Blair
+Robert W. Baird
+Piper Sandler
+Raymond James
+Stifel
+Harris Williams
+Lincoln International
+Macquarie Capital
+Stephens Inc.
+Needham & Company
+Oppenheimer
+TD Cowen
+Wedbush Securities
+
+# 13. PRIVATE EQUITY -- MEGA FUNDS
+Blackstone
+KKR
+Apollo Global Management
+The Carlyle Group
+TPG
+Warburg Pincus
+Thoma Bravo
+Vista Equity Partners
+Advent International
+Ares Management
+Brookfield Asset Management
+Bain Capital
+
+# 14. PRIVATE EQUITY -- UPPER MIDDLE MARKET & EUROPEAN MAJORS
+Hellman & Friedman
+General Atlantic
+Silver Lake
+Insight Partners
+Francisco Partners
+CVC Capital Partners
+EQT
+Permira
+Cinven
+Apax Partners
+Hg Capital
+Bridgepoint
+Nordic Capital
+Ardian
+Partners Group
+Leonard Green & Partners
+WCAS
+TA Associates
+Summit Partners
+TCV
+GI Partners
+
+# 15. HEDGE FUNDS -- MULTI-STRATEGY
+Citadel
+Millennium Management
+Point72 Asset Management
+Balyasny Asset Management
+ExodusPoint Capital
+Schonfeld Strategic Advisors
+Verition Fund Management
+Walleye Capital
+
+# 16. HEDGE FUNDS -- QUANTITATIVE
+Renaissance Technologies
+Two Sigma
+D.E. Shaw
+AQR Capital Management
+Man Group
+WorldQuant
+PDT Partners
+Winton Group
+
+# 17. HEDGE FUNDS -- MACRO / ACTIVIST / LONG-SHORT
+Bridgewater Associates
+Pershing Square Capital
+Elliott Management
+Tiger Global Management
+Coatue Management
+Viking Global Investors
+Third Point
+Lone Pine Capital
+Baupost Group
+Appaloosa Management
+Brevan Howard
+Soros Fund Management
+BlueCrest Capital
+Marshall Wace
+Farallon Capital
+
+# 18. QUANTITATIVE / PROPRIETARY TRADING FIRMS
+Jane Street
+Citadel Securities
+Hudson River Trading (HRT)
+Jump Trading
+Optiver
+IMC Trading
+Flow Traders
+Susquehanna International Group (SIG)
+Virtu Financial
+Tower Research Capital
+Five Rings Capital
+Radix Trading
+DRW Trading
+Akuna Capital
+Headlands Technologies
+Wolverine Trading
+Peak6
+Old Mission Capital
+Teza Technologies
+XTX Markets
+
+# 19. VENTURE CAPITAL
+Sequoia Capital
+Andreessen Horowitz (a16z)
+Accel
+General Catalyst
+Benchmark
+Kleiner Perkins
+Lightspeed Venture Partners
+Founders Fund
+Index Ventures
+Bessemer Venture Partners
+Greylock Partners
+GV (Google Ventures)
+Khosla Ventures
+NEA
+Battery Ventures
+Thrive Capital
+Y Combinator
+
+# Sovereign Wealth Funds
+Norges Bank (NBIM)
+Abu Dhabi Investment Authority (ADIA)
+GIC
+Saudi Public Investment Fund (PIF)
+Kuwait Investment Authority (KIA)
+China Investment Corporation (CIC)
+Temasek Holdings
+Mubadala Investment Company
+Qatar Investment Authority (QIA)
+HKMA
+
+# Major Pension Funds
+CPPIB (CPP Investments)
+CDPQ (Caisse de depot)
+OTPP (Ontario Teachers')
+CalPERS
+APG Asset Management
+
+# Global Asset Managers
+BlackRock
+Vanguard
+Fidelity Investments
+State Street Global Advisors
+Capital Group
+PIMCO
+Wellington Management
+T. Rowe Price
+Invesco
+JPMorgan Asset Management
+Goldman Sachs Asset Management
+Schroders
+Amundi
+Franklin Templeton
+
+# 21. MANAGEMENT CONSULTING -- MBB
+McKinsey & Company
+Boston Consulting Group (BCG)
+Bain & Company
+
+# Tier 2 Strategy
+Oliver Wyman
+L.E.K. Consulting
+Kearney
+Roland Berger
+Strategy& (PwC)
+EY-Parthenon
+Deloitte Monitor
+Accenture Strategy
+KPMG Strategy
+Simon-Kucher & Partners
+OC&C Strategy Consultants
+Arthur D. Little
+
+# Boutique Strategy
+Altman Solon
+ghSMART
+Putnam Associates
+ZS Associates
+Mars & Co
+Innosight
+ClearView Healthcare Partners
+Bridgespan Group
+Huron Consulting Group
+Trinity Life Sciences
+Health Advances
+Guidehouse
+Kaiser Associates
+
+# 23. ECONOMIC CONSULTING
+Analysis Group
+Compass Lexecon
+NERA Economic Consulting
+Charles River Associates (CRA)
+Cornerstone Research
+The Brattle Group
+Bates White
+Berkeley Research Group (BRG)
+
+# 24. RESTRUCTURING & TURNAROUND
+AlixPartners
+Alvarez & Marsal (A&M)
+FTI Consulting
+
+# 25. BIG 4 ACCOUNTING / PROFESSIONAL SERVICES
+Deloitte
+PricewaterhouseCoopers (PwC)
+Ernst & Young (EY)
+KPMG
+
+# 26. TECHNOLOGY CONSULTING / IT SERVICES
+Accenture
+TCS
+Cognizant
+Capgemini
+IBM Consulting
+Wipro
+ThoughtWorks
+Slalom
+Gartner
+
+# 27. ELITE LAW FIRMS -- US (VAULT TOP ~30)
+Cravath, Swaine & Moore
+Wachtell, Lipton, Rosen & Katz
+Skadden, Arps, Slate, Meagher & Flom
+Latham & Watkins
+Kirkland & Ellis
+Sullivan & Cromwell
+Davis Polk & Wardwell
+Paul, Weiss, Rifkind, Wharton & Garrison
+Milbank
+Simpson Thacher & Bartlett
+Gibson, Dunn & Crutcher
+Quinn Emanuel Urquhart & Sullivan
+Debevoise & Plimpton
+Cleary Gottlieb Steen & Hamilton
+Weil, Gotshal & Manges
+Covington & Burling
+WilmerHale
+Ropes & Gray
+Williams & Connolly
+Willkie Farr & Gallagher
+Cooley
+Vinson & Elkins
+Morrison & Foerster
+Sidley Austin
+Jones Day
+O'Melveny & Myers
+Wilson Sonsini Goodrich & Rosati
+
+# UK Magic Circle
+Linklaters
+Clifford Chance
+A&O Shearman
+Freshfields Bruckhaus Deringer
+Slaughter and May
+
+# UK Silver Circle & Notable
+Macfarlanes
+Travers Smith
+Mishcon de Reya
+Ashurst
+Herbert Smith Freehills
+
+# Global Mega-Firms
+Baker McKenzie
+DLA Piper
+Hogan Lovells
+Norton Rose Fulbright
+White & Case
+CMS
+Dentons
+
+# 29. ACTUARIAL / INSURANCE / RISK MANAGEMENT
+Marsh McLennan
+Aon
+Willis Towers Watson (WTW)
+Arthur J. Gallagher
+Milliman
+
+# 30. REAL ESTATE SERVICES
+CBRE Group
+JLL (Jones Lang LaSalle)
+Cushman & Wakefield
+Colliers International
+Savills
+Newmark Group
+Knight Frank
+Eastdil Secured
+Marcus & Millichap
+
+# 31. EXECUTIVE SEARCH / HR CONSULTING
+Korn Ferry
+Spencer Stuart
+Heidrick & Struggles
+Egon Zehnder
+Russell Reynolds Associates
+Mercer
+
+# 32. PR / STRATEGIC COMMUNICATIONS
+Edelman
+Brunswick Group
+Teneo
+FGS Global
+Kekst CNC
+FTI Strategic Communications
+Joele Frank
+APCO Worldwide
+
+# 33. DEFENSE PRIMES -- US
+Lockheed Martin
+RTX (Raytheon Technologies)
+Northrop Grumman
+Boeing Defense, Space & Security
+General Dynamics
+L3Harris Technologies
+Leidos
+SAIC
+Howmet Aerospace
+Gulfstream Aerospace
+Collins Aerospace
+
+# 34. DEFENSE PRIMES -- INTERNATIONAL
+BAE Systems
+Thales
+Rheinmetall
+Leonardo
+Saab
+Dassault Aviation
+Airbus Defence & Space
+Rafael Advanced Defense
+Elbit Systems
+Israel Aerospace Industries (IAI)
+Hanwha Aerospace
+Mitsubishi Heavy Industries
+Hindustan Aeronautics (HAL)
+Turkish Aerospace Industries (TAI)
+KNDS (KMW + Nexter)
+Kongsberg
+Hensoldt
+Indra Sistemas
+
+# 35. DEFENSE TECH STARTUPS / NEW WAVE
+Anduril Industries
+Shield AI
+Saronic Technologies
+CHAOS Industries
+Helsing
+Hadrian
+Hermeus
+Epirus
+Kratos Defense
+Skydio
+Applied Intuition
+Rebellion Defence
+Primer AI
+Vannevar Labs
+Second Front Systems
+Fortem Technologies
+Joby Aviation
+Archer Aviation
+Reliable Robotics
+Gecko Robotics
+Armada
+Mach Industries
+Harmattan AI
+Istari Digital
+Quantum Systems
+Stark Defence
+TEKEVER
+ICEYE
+
+# 36. SPACE
+SpaceX
+Blue Origin
+Rocket Lab
+Relativity Space
+United Launch Alliance (ULA)
+Arianespace
+Ball Aerospace (BAE Systems Space)
+Maxar Technologies
+Planet Labs
+Axiom Space
+Vast
+Sierra Space
+Firefly Aerospace
+Isar Aerospace
+PLD Space
+Impulse Space
+Astranis
+Varda Space Industries
+Ursa Major Technologies
+
+# 37. INTELLIGENCE / GOVERNMENT SERVICES / FFRDCS / NATIONAL LABS
+Booz Allen Hamilton
+CACI International
+Peraton
+ManTech International
+MITRE Corporation
+RAND Corporation
+Institute for Defense Analyses (IDA)
+Aerospace Corporation
+Johns Hopkins APL
+MIT Lincoln Laboratory
+Sandia National Laboratories
+Los Alamos National Laboratory
+Lawrence Livermore National Laboratory
+
+# 38. BIG PHARMA -- GLOBAL
+Eli Lilly
+Johnson & Johnson
+AbbVie
+Merck & Co.
+Pfizer
+Roche
+Novartis
+AstraZeneca
+Sanofi
+GSK
+Novo Nordisk
+Bristol-Myers Squibb
+Takeda
+Bayer
+Boehringer Ingelheim
+Daiichi Sankyo
+Astellas Pharma
+Otsuka Pharmaceutical
+CSL (CSL Behring)
+Sun Pharma
+Cipla
+Dr. Reddy's
+Teva Pharmaceutical
+UCB
+Ipsen
+Lundbeck
+Merck KGaA (EMD Serono)
+ViiV Healthcare
+
+# 39. BIOTECH LEADERS
+Amgen
+Gilead Sciences
+Regeneron Pharmaceuticals
+Vertex Pharmaceuticals
+Moderna
+BioNTech
+Genentech (Roche)
+Biogen
+Illumina
+10x Genomics
+CRISPR Therapeutics
+Intellia Therapeutics
+Editas Medicine
+Alnylam Pharmaceuticals
+BioMarin
+Argenx
+Sarepta Therapeutics
+Beam Therapeutics
+Exact Sciences
+Natera
+Legend Biotech
+
+# 40. MEDICAL DEVICES / MEDTECH
+Medtronic
+J&J MedTech
+Abbott Laboratories
+Siemens Healthineers
+Stryker
+Becton Dickinson (BD)
+GE HealthCare
+Boston Scientific
+Intuitive Surgical
+Edwards Lifesciences
+Baxter International
+Zimmer Biomet
+Hologic
+ResMed
+DexCom
+Align Technology
+Philips
+Olympus
+Smith & Nephew
+Straumann
+Varian
+
+# 41. HEALTHCARE TECH / DIGITAL HEALTH
+Epic Systems
+Oracle Health (Cerner)
+Veeva Systems
+Tempus AI
+Flatiron Health
+Oscar Health
+Doximity
+Spring Health
+
+# 42. CROs / CDMOs / LIFE SCIENCES SERVICES
+IQVIA
+Thermo Fisher Scientific (PPD)
+Charles River Laboratories
+ICON plc
+Parexel
+Medpace
+WuXi AppTec
+WuXi Biologics
+Samsung Biologics
+Lonza
+Catalent
+Danaher (life science segment)
+Agilent Technologies
+Waters Corporation
+Eurofins Scientific
+Cytiva
+Beckman Coulter
+Pall Corporation
+
+# 43. OIL & GAS SUPERMAJORS / NOCs
+Saudi Aramco
+ExxonMobil
+Chevron
+Shell
+TotalEnergies
+BP
+ConocoPhillips
+Equinor
+Eni
+Petrobras
+ADNOC
+PetroChina / CNPC
+Sinopec
+CNOOC
+QatarEnergy
+Enbridge
+Canadian Natural Resources
+EOG Resources
+Schlumberger (SLB)
+Halliburton
+Baker Hughes
+
+# 44. RENEWABLES / CLEAN ENERGY
+NextEra Energy
+Iberdrola
+Enel (Enel Green Power)
+Orsted
+Vestas Wind Systems
+Siemens Gamesa
+Enphase Energy
+First Solar
+Brookfield Renewable
+EDP Renovaveis (EDPR)
+SolarEdge Technologies
+RWE
+Acciona Energia
+LONGi Green Energy
+JinkoSolar
+Plug Power
+Bloom Energy
+
+# 45. MINING / COMMODITIES
+BHP
+Rio Tinto
+Glencore
+Vale
+Anglo American
+Freeport-McMoRan
+Newmont
+Barrick Gold
+Southern Copper
+Nucor
+ArcelorMittal
+Albemarle
+Arcadium Lithium (Livent)
+SQM
+Teck Resources
+Fortescue
+
+# 46. CHEMICALS / SPECIALTY MATERIALS
+BASF
+Dow
+DuPont
+LyondellBasell
+Linde
+Air Liquide
+Air Products & Chemicals
+Sherwin-Williams
+PPG Industries
+3M
+Shin-Etsu Chemical
+SABIC
+Toray Industries
+Covestro
+Evonik
+Solvay
+Akzo Nobel
+
+# 47. LUXURY CONGLOMERATES & HOUSES
+LVMH
+Hermès
+Kering
+Richemont
+Chanel
+Prada Group
+Burberry
+Tapestry
+Capri Holdings
+Moncler
+Brunello Cucinelli
+Giorgio Armani
+Dolce & Gabbana
+Valentino
+Puig
+Louis Vuitton
+Dior
+Fendi
+TAG Heuer
+Gucci
+Saint Laurent / YSL
+Bottega Veneta
+Balenciaga
+Alexander McQueen
+Versace
+Jimmy Choo
+Michael Kors
+Coach
+Kate Spade
+Stone Island
+Carolina Herrera
+Jean Paul Gaultier
+Byredo
+
+# 48. LUXURY WATCHES & JEWELRY
+Rolex
+Patek Philippe
+Audemars Piguet
+Vacheron Constantin
+A. Lange & Söhne
+Omega
+Richard Mille
+Cartier
+Tiffany & Co.
+Van Cleef & Arpels
+Chopard
+Graff
+Swatch Group
+Breguet
+Blancpain
+Harry Winston
+IWC Schaffhausen
+Jaeger-LeCoultre
+Montblanc
+
+# 49. FMCG / CONSUMER GOODS
+Nestlé
+Procter & Gamble
+Unilever
+PepsiCo
+Coca-Cola
+Mondelez
+Colgate-Palmolive
+Mars, Inc.
+Danone
+Kraft Heinz
+General Mills
+AB InBev
+Kimberly-Clark
+Henkel
+Reckitt
+
+# 50. BEAUTY & COSMETICS
+L'Oréal
+Estée Lauder Companies
+Shiseido
+Beiersdorf
+Amorepacific
+
+# 51. PREMIUM / PERFORMANCE AUTOMOTIVE
+Ferrari
+Porsche AG
+Rolls-Royce Motor Cars
+Bentley
+Lamborghini
+McLaren
+Bugatti-Rimac
+Aston Martin Lagonda
+Mercedes-Benz Group
+BMW Group
+Tesla
+Toyota Motor
+Honda Motor
+Volkswagen Group
+Hyundai Motor Group
+Kia
+BYD
+Rivian
+Lucid Motors
+Stellantis
+Geely Automobile
+Audi
+Volvo Cars
+Polestar
+Lotus
+Maserati
+Alfa Romeo
+
+# 52. MEDIA CONGLOMERATES
+The Walt Disney Company
+Comcast / NBCUniversal
+Warner Bros. Discovery
+Paramount / Skydance
+Lionsgate
+Bloomberg LP
+Thomson Reuters
+The New York Times
+Financial Times
+News Corp / Fox Corporation
+Bertelsmann
+Penguin Random House
+Universal Pictures
+Sky
+
+# 53. STREAMING / SOCIAL MEDIA
+Netflix
+Spotify
+YouTube (Google)
+Snap Inc.
+Reddit
+Discord
+X (formerly Twitter)
+TikTok
+
+# 54. TELECOM
+China Mobile
+T-Mobile US
+AT&T
+Verizon
+Deutsche Telekom
+Vodafone
+Orange
+Telefónica
+NTT
+SK Telecom
+Singtel
+Bharti Airtel
+e& (Etisalat)
+STC
+América Móvil
+
+# 55. RETAIL / E-COMMERCE
+JD.com
+MercadoLibre
+Walmart
+Costco
+Inditex (Zara)
+Nike
+Adidas
+lululemon
+IKEA (Ingka Group)
+Sephora
+Shopee
+
+# 56. FOOD & BEVERAGE / SPIRITS
+Starbucks
+McDonald's
+Chipotle
+Diageo
+Pernod Ricard
+Moët Hennessy (LVMH)
+Heineken
+Campari Group
+
+# 57. TOP REITS / REAL ESTATE DEVELOPERS
+Prologis
+American Tower
+Equinix
+Digital Realty
+Simon Property Group
+Sun Hung Kai Properties
+Goodman Group
+Vonovia
+
+# 58. PAYMENT NETWORKS & FINANCIAL MARKET INFRASTRUCTURE
+Visa
+Mastercard
+American Express
+S&P Global
+Moody's
+MSCI
+CME Group
+Intercontinental Exchange (ICE)
+Nasdaq Inc.
+London Stock Exchange Group (LSEG)
+
+# 59. INSURANCE / REINSURANCE
+Berkshire Hathaway
+Allianz
+AXA
+Ping An
+Munich Re
+Swiss Re
+Chubb
+
+# 60. TRANSPORTATION & LOGISTICS
+A.P. Moller-Maersk
+UPS
+FedEx
+Deutsche Post / DHL

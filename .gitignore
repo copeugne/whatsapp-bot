@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.venv/
+
+# Environment
+.env
+evolution.env
+
+# Dependency lockfile is intentionally versioned.
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker volumes (if local)
+postgres_data/
+redis_data/
+
+# Scraper data
+data/
+
+# Logs
+logs/
+
+# Private deployment material and local agent state
+*.key
+*.pem
+.env.*
+!.env.example
+evolution.env.*
+!evolution.env.example
+.pi/
+.omo/
+.omx/
+.claude/
+.codegraph
+.pytest_cache/
+*.log
+logs.txt
+*.png
+*.jpg
+*.jpeg

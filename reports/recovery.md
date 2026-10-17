@@ -1,0 +1,54 @@
+# Bot recovery and GitHub readiness
+
+Objective: restore the existing VPS bot, prepare and publish a safe private source repository, then deploy the user-authorized features. Current deployment source: `dabd223acf1a5942b280d7244df3d29c2cb6f5aa`.
+
+| Required outcome | Status | Evidence | Remaining gap |
+| --- | --- | --- | --- |
+| Identify outage | Confirmed | VPS systemd active; public /health HTTP 200; 42 token HTTP 401 invalid_client; WhatsApp state close | Original credential rejection cause (expiry, revocation or rotation) not established |
+| Recover 42 | Validated live | 2026-10-17 token and campus events HTTP 200; restarted service fetched 70 events and 137 offers | Browser OAuth flow not exercised |
+| Recover WhatsApp | Validated API connection and send acceptance | User scanned QR; connection state open; event polls and offers accepted with HTTP 201 | Recipient-side receipt not independently observed |
+| Company exclusions, consistent commands and corrected offer links | Deployed and validated for stated scope | Commit dabd223; 254 release tests passed; source hashes match; live admin list replies accepted; isolated filter persistence/matching and link rendering pass | User receipt confirmation and browser OAuth not independently exercised |
+| GitHub publication | Complete, private | copeugne/whatsapp-bot main, dabd223; remote/local SHA matched; 53-file staged secret checks passed | License selection remains optional for private use |
+
+Secrets and QR codes are excluded from reports. The replacement secret supplied in chat should be rotated. Existing encrypted user data and Evolution volumes must be preserved. /health is only process liveness, not dependency readiness. Actual message delivery and OAuth browser flow need live user confirmation.
+
+## Changes and evidence
+
+- 2026-10-17: replacement credentials stored only in the VPS environment file, mode 0600. Restarted the systemd service. Both scraper integrations recovered. Existing destination and data preserved.
+- Gemini authentication moved from URL query parameters to the `x-goog-api-key` header because HTTP request logging exposed the key in the journal. Applied the identical small fix to the VPS after verifying the original source SHA-256 matched local source, then restarted the service. Historical journals still contain the old key; rotate it. Journals were not deleted. Final live checks after restart: WhatsApp open, public health 200, six successful Gemini requests with credential-free URLs, and continued event/offer send acceptance. Local and deployed Gemini source SHA-256 both `3125b01d44370eeb624699c69fa94127b82a582c98c36078dd1f59c0750eb067`.
+- Local tests: `uv run --frozen --extra dev pytest -v --tb=short`: 220 passed in 21.60s before the isolated Gemini change. `uv run --frozen --extra dev pytest -v tests/test_gemini.py --tb=short`: 1 passed in 0.03s after the change. Private durable logs: `reports/pytest.log` and `reports/gemini-test.log` (ignored by Git).
+- GitHub preparation: ignore private environment variants, TLS material, images, runtime state and agent metadata; version `uv.lock`; fix example Evolution port to 18080; preserve destination group on provisioning; use SSH config alias for transfers and exclude private files; remove unlocked dependency-install fallback.
+- Candidate-file scan checks known 42/Google/GitHub credential patterns and private-key headers without printing values. Passed, but is not a guarantee against every possible secret format.
+- Deferred monitoring and provisioning TLS limitations are recorded in [BACKBURNER.md](../BACKBURNER.md). Provisioning was not run on the working VPS. License selection and actual publication are outside this block.
+
+## Completed local follow-up: command consistency and broken offer links
+
+User requested event aliases as well as long forms, and consistent action-first company naming. Added `/f`, `/uf`, `/fs`; canonical company list is `/filterscompany`, with `/fcs` shorthand and `/companyfilters` retained for compatibility. Broken generated Meta offer route reproduced as HTTP 404. API offers contain numeric ID and slug, but no canonical URL. User supplied a working student URL `https://companies.intra.42.fr/en/offers/28517` for Scrum Master Junior. Both message formatting and Tier 1 private notifications now use the shared numeric-ID student route. Unauthenticated Companies responses redirect to sign-in, so authenticated page content is user-confirmed, not independently validated. Old link assertions are updated because the previous route is demonstrated broken, not to hide a failing test. No production deployment or edit of already-sent messages performed.
+
+Verification: full run executed with 253 passing tests and one fixture failure (`reports/commands-links-full.log`). The limit test fabricated offer ID 0; the new route helper requires positive integer IDs to avoid generating invalid URLs. Corrected only that fixture's IDs to 1..10, preserving the 3-item limit assertion and all test expectations. Reran the affected offers, links and filter subsystems: 118/118 passed in 6.16s (`reports/commands-links-focused.log`). No production source changed after the full run. Active LSP diagnostics reported zero errors in all six changed Python paths. The full suite was not rerun after this fixture-only correction; retain the original failure as evidence.
+
+## Completed local block: company exclusions
+
+User approved preserving local improvements and importing the eight VPS event exclusions. Add company blocklist management using the existing admin event-filter workflow, persisted in the TOML configuration. Apply before publishing or Tier 1 registration/notifications, and to on-demand queries. Evidence required: command authorization, persistence/reload, matching boundaries, event and offer integration regressions. Stop when local behavior and regressions pass; production deployment of this new feature is not included without explicit authorization.
+
+Follow-up: added short aliases `/fc`, `/ufc`, `/fcs`, keeping long commands compatible. 20 focused company/event filter tests passed, including lowercase/uppercase aliases and admin authorization (`reports/company-aliases.log`). Local only, not deployed.
+
+Implementation: `/filtercompany`, `/unfiltercompany` and `/companyfilters` use the existing event-filter admin check and private confirmation pattern. Names persist atomically in `[companies].exclude_names`. Shared normalized whole-phrase matching covers event/offer titles and descriptions plus explicit company names. Both scrapers reload at each cycle, before Tier 1 side effects; on-demand queries load the same blocklist. Existing event exclusions, runtime state and GitHub preparation are preserved. Small existing lint findings in touched modules were resolved without changing workflow semantics.
+
+2026-10-17 evidence: focused filter tests passed (17/17); final full suite passed (236/236, 21.58s), including persistence/reload, authorization, malformed inputs, literal matching boundaries, special-character serialization and both consumer paths. Durable private logs: `reports/company-focused.log`, `reports/company-full.log`. Active LSP probes: zero errors in six changed Python paths. Selected Ruff import/unused-variable/annotation/control-flow checks passed. All production event exclusion terms are present locally. Candidate secret-pattern scan passed.
+
+Limitations: matching mentions does not identify the verified employer and does not infer brand aliases. Configuration changes apply at cycle boundaries, not midway through a cycle. Previously rejected items remain seen when exclusions are removed, matching event-title filter behavior. No live command sends or new-feature deployment performed. README documents administration and these semantics.
+
+Stop condition: live authentication, scraper reads and Evolution send acceptance restored; source preparation and relevant checks complete. Next highest-value validation is recipient confirmation and an OAuth registration flow with an authorized test user.
+
+## GitHub publication authorization
+
+User authorized creating private `copeugne/whatsapp-bot`. Exact staged source set: 53 files; credential-pattern and local secret-value checks passed, with private runtime files excluded. The removed `/companyfilters` alias is no longer supported; `/filterscompany` and `/fcs` remain. Latest focused command/filter checks: 28 passed (`reports/remove-companyfilters.log`). User subsequently authorized deploying these features. Deployment will replace source only, retain production environment and data, preserve production filter changes, back up replaced files and restart only whatsapp-bot. No provisioning, TLS or container recreation.
+
+## Authorized VPS deployment
+
+2026-10-17: final release suite passed 254/254 in 21.52s (`reports/deploy-release-tests.log`). Staged source from `git archive dabd223`. Python source hashes matched the pinned release after replacing six changed modules. Dependency manifest and lockfile were unchanged. Existing event/offer filter tables were preserved exactly; added only an empty shared company table when absent. Environment files were verified byte-identical before/after deployment. Runtime data and Docker volumes were not transferred or rewritten. Only whatsapp-bot was stopped/started; no provisioning script was run.
+
+VPS release directory: `/opt/whatsapp-bot/releases/dabd223/`. Backups: `before.tar.gz` and exact stopped-state `rollback.tar.gz`; both mode 0600. Source provenance: `source-manifest.json`. Deployment progress log: `deploy.log`; local mirror: `reports/deploy-vps.log`. Rollback restores source/config from rollback.tar.gz and restarts only whatsapp-bot. Live checks passed (`reports/deploy-live.log`): deployed handler add/list/remove paths and removed-alias rejection exercised with temporary config; company exclusions persisted/reloaded and blocked event/offer fixtures; numeric student offer URL rendered correctly. Real running service handled authenticated `/fcs` and `/fs` webhook commands with private admin replies accepted. Public health HTTP 200, Evolution WhatsApp state open, direct 42 events/offers HTTP 200. Recent running-service journal summary: two successful event requests, four successful offer requests, two Evolution sendText HTTP 201 responses and zero scraper-cycle failures in the inspected five-minute scope. No tokens, phone numbers or webhook secrets were written to the report. Actual phone receipt and browser OAuth remain user-side validations; past messages with old links were not edited.
+
+Outcome: deployed source and common command/dependency workflows validated. Stop condition met. No TLS, firewall or container changes. Next action is user confirmation of the two private filter-list messages and normal operation.

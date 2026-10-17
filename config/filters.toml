@@ -1,0 +1,159 @@
+# Scraper event filters
+# These filters control which new events the background scraper posts to WhatsApp.
+# All fields are optional — omit or leave empty to disable that filter.
+
+[scraper]
+# kinds: list of event kinds to include (OR logic).
+# Valid: association, challenge, conference, event, extern, hackathon, meet_up, other, workshop
+kinds = []
+
+# keyword: case-insensitive search in event name + description
+keyword = ""
+
+# available_only: only post events that still have open spots
+available_only = false
+
+# exclude_names: terms matched against the NORMALIZED event name (substring, case-insensitive).
+# Normalization: lowercased, accents stripped, non-alphanumeric collapsed to single space.
+# One term catches all accent/separator variants — no need for duplicates.
+exclude_names = [
+    # Fitness / Wellness / Sports
+    "malloc tes muscles",   # 42 Fitness weightlifting
+    "capoeira",             # capoeira workshops
+    "shiatsu",              # massage sessions
+    "yoga",                 # yoga sessions
+    "escalade",             # climbing classes
+    "babyfoot",             # foosball tournaments
+    "sophrologie",          # relaxation sessions
+    "petanque",             # petanque
+
+    # Food / Social (weekly recurring)
+    "petit dejeuner",       # breakfast events (covers petit-déjeuner etc.)
+    "morning breakfast",    # breakfast events (English variant)
+    "t time",               # tea time gatherings (covers t-time, (t) time)
+    "le 4-4",               # cake events
+    "vente de crepes",      # crepe sales
+    "barbecue",             # BBQ events
+
+    # Board games / Social clubs
+    "slice and dice",       # board game nights
+    "geoguessr",            # geography game
+    "roll & play",          # RPG club
+    "friday movie",         # movie nights
+
+    # Gaming / Leisure
+    "poker",                # poker nights
+    "watch party",          # TV/esport viewing parties
+    "kendama",              # kendama jam
+    "magic the gathering",  # card game nights
+    "casino",               # casino party nights
+    "arcane",               # Arcane TV show viewing
+    "harry potter",         # Harry Potter movie nights
+    "blind test",           # blind test quizzes
+    "koh-lanta",            # TV show viewing
+    "burger quiz",          # quiz game show
+    "smash bros",           # Smash Bros tournaments
+    "projection",           # movie screenings
+
+    # Seasonal / Parties
+    "galette des rois",     # Epiphany cake
+    "secret santa",         # Secret Santa
+    "halloween",            # Halloween parties
+    "des coa",              # coalition events (des coalitions, choc des coas)
+    "xmas",                 # Christmas events
+    "afterwork bde",        # BDE afterwork parties
+    "bde flex",
+    "afterwork",
+    "salsa overflow",
+    "piscine discovery",    # piscine discovery events
+    "noel",                 # Christmas events
+    "paint",                # paint & sip / art social
+
+    # Arts / Culture clubs
+    "strlaine",             # knitting/crochet club
+    "art42",                # Art42 club
+    "lovelace - spill",     # Lovelace Spill the Tea
+    "photo club",           # photography club
+    "session photo",        # badge photo sessions
+
+    # Pedagogical recurring
+    "ama pedago",           # AMA Pedago sessions
+    "ask me anything pedago",  # AMA Pedago (full name variant)
+    "clash of code",        # coding competition
+    "spot the bug",         # debugging event
+    "reunion de rentree",   # welcome-back meetings
+    "ama generale",         # general AMA sessions
+    "peer-class",           # peer classes
+
+    # Administrative / Career
+    "activ action",         # career workshops
+    "rncp",                 # RNCP info sessions
+    "construire la trame",  # CV building workshops
+    "impact confiance",     # confidence workshops
+    "remise a niveau",      # iMac maintenance/reset sessions
+    "exam stud",            # exam studio
+    "reserve aux femmes",   # women-only events
+    # Additional exclusions recovered from the VPS
+    "42dB",
+    "Start-up club",
+    "forum femme",
+    "Behta",
+    "Visite 42",
+    "Cours de Sport",
+    "Ctrl+Zen",
+    "Slide & Dice",
+]
+
+# exclude_patterns: regex patterns matched against the NORMALIZED event name.
+# Normalization: lowercased, accents stripped, non-alphanumeric collapsed to single space.
+# Patterns catch all accent/separator/spacing variants in one entry.
+exclude_patterns = [
+    "(?<![a-z])dan[cs]e(?![a-z])",                                 # all dance events (42dance, ninja danse, flex dance, danse orientale)
+    "42\\s*(?:ctrl|bagarre|chess|gaming|sip|improv|theatre)",       # 42-branded clubs
+    "42\\s*eloquence",                                              # 42eloquence / 42 eloquence
+    "mahjong|riichi",                                               # mahjong variants (42riichi, mahjong)
+]
+
+
+# =============================================================================
+# Offers scraper filters
+# =============================================================================
+# These filters control which new offers the background offers scraper posts
+# to WhatsApp. All fields are optional — omit or leave empty to disable.
+#
+# Server-side filters (sent as API query params — reduces network traffic):
+#   contract_types, target, city, country
+#
+# Client-side filters (applied after fetching):
+#   keyword, exclude_titles, exclude_patterns
+
+[offers_scraper]
+# contract_types: list of contract types to include (OR logic).
+# Valid: cdd, cdi, freelance, stage
+contract_types = []
+
+# target: filter by target audience. Valid: student, student_and_alumni
+target = ""
+
+# city: server-side city filter (exact match on the 42 API)
+city = ""
+
+# country: server-side country filter
+country = ""
+
+# keyword: case-insensitive search in offer title + descriptions
+keyword = ""
+
+# exclude_titles: terms matched against the NORMALIZED offer title (substring).
+# Normalization: lowercased, accents stripped, non-alphanumeric collapsed to single space.
+exclude_titles = []
+
+# exclude_patterns: regex patterns matched against the NORMALIZED offer title.
+# exclude_patterns = []
+
+# Shared company exclusions for events and offers, including on-demand queries.
+# Managed through /filtercompany, /unfiltercompany and /filterscompany.
+# Short forms: /fc, /ufc, /fcs.
+# Normalized whole-name matching in titles/descriptions and company.name.
+[companies]
+exclude_names = []

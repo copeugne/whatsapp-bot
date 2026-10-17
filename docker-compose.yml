@@ -1,0 +1,62 @@
+services:
+  evolution-api:
+    container_name: evolution_api
+    image: evoapicloud/evolution-api@sha256:966625532d9076a2381e973a271307d107e6f070450de3abeeea8bd18be07252
+    restart: always
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "127.0.0.1:18080:8080"
+    volumes:
+      - evolution_instances:/evolution/instances
+    networks:
+      - bot-network
+    env_file:
+      - evolution.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  postgres:
+    container_name: evolution_postgres
+    image: postgres@sha256:9b1d34adbce1dd07ee6e94b4a2cf698884b89bd44a6c9c12f5da8f3acbfe4957
+    restart: always
+    command:
+      - postgres
+      - -c
+      - max_connections=100
+      - -c
+      - listen_addresses=*
+    environment:
+      - POSTGRES_DB=evolution
+      - POSTGRES_USER=evolution
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?set in evolution.env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - bot-network
+    expose:
+      - "5432"
+
+  redis:
+    container_name: evolution_redis
+    image: redis@sha256:ff02b58f971e7d7d156a1267e283fcbbeee91773b6aa36c49dac28ecfe28eadf
+    restart: always
+    command: >
+      redis-server --port 6379 --appendonly yes --requirepass ${REDIS_PASSWORD:?set in evolution.env}
+    volumes:
+      - redis_data:/data
+    networks:
+      - bot-network
+    expose:
+      - "6379"
+
+volumes:
+  evolution_instances:
+  postgres_data:
+  redis_data:
+
+networks:
+  bot-network:
+    name: bot-network
+    driver: bridge

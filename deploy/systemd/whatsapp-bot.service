@@ -1,0 +1,47 @@
+# Systemd service for the WhatsApp Bot
+#
+# Usage:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now whatsapp-bot
+#   sudo journalctl -u whatsapp-bot -f
+
+[Unit]
+Description=WhatsApp Bot (42 Events)
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+[Service]
+Type=simple
+User=whatsapp-bot
+Group=whatsapp-bot
+WorkingDirectory=/opt/whatsapp-bot
+EnvironmentFile=/opt/whatsapp-bot/.env
+
+ExecStart=/usr/local/bin/uv run bot
+
+Restart=on-failure
+RestartSec=5
+
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateTmp=yes
+ProtectSystem=full
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+LockPersonality=yes
+RestrictSUIDSGID=yes
+UMask=0077
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=whatsapp-bot
+
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
