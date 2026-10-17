@@ -20,6 +20,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from whatsapp_bot.employers import (
+    EmployerResolutionError,
+    EmployerResolver,
+    match_tier1_employer,
+)
 from whatsapp_bot.evolution import EvolutionClient
 from whatsapp_bot.ft_client import FtClient
 
@@ -207,12 +212,23 @@ def offer_url(offer: dict) -> str:
     return f"https://companies.intra.42.fr/en/offers/{offer_id}"
 
 
-def format_offer(offer: dict) -> str:
+def format_offer(offer: dict, *, employer: dict | None = None) -> str:
     """Full offer formatting including description.
 
     Used for text messages (``/offers`` command, tier 1 group posts).
     """
     header = format_offer_short(offer)
+    if employer is None:
+        employer_label = "Unverified (extractor not configured)"
+    elif employer["status"] == "supported":
+        employer_label = employer["hiring_company"]
+        if employer["relationship"] == "named_client":
+            employer_label += " (named recruitment client)"
+    elif employer["status"] == "unavailable":
+        employer_label = "Unavailable (extraction failed; try again later)"
+    else:
+        employer_label = "Unnamed client" if employer["relationship"] == "unnamed_client" else "Unknown"
+    header += f"\nHiring company: {employer_label}"
 
     # Prefer little_description (summary), fall back to big_description
     desc_raw = offer.get("little_description") or ""
@@ -281,6 +297,7 @@ async def get_upcoming_offers(
     limit: int = 5,
     offer_filter: OfferFilter | None = None,
     filters_path: str | None = None,
+    employer_resolver: EmployerResolver | None = None,
 ) -> str:
     """Return a formatted string of the latest offers for a campus."""
     from dataclasses import replace
@@ -325,58 +342,22 @@ async def get_upcoming_offers(
             else "No active offers found."
         )
 
-    parts = [format_offer(o) for o in offers[:limit]]
+    parts = []
+    for offer in offers[:limit]:
+        employer = None
+        if employer_resolver is not None:
+            try:
+                employer = await employer_resolver.resolve(offer)
+            except EmployerResolutionError as exc:
+                logger.warning("/offers employer extraction failed for %s: %s", offer.get("id"), exc)
+                employer = {"status": "unavailable"}
+        parts.append(format_offer(offer, employer=employer))
     return "\n\n---\n\n".join(parts)
 
 
 # ---------------------------------------------------------------------------
 # Tier 1 matching for offers
 # ---------------------------------------------------------------------------
-
-
-def _find_tier1_offer_match(
-    offer: dict,
-    entries: list[SearchEntry],
-) -> str | None:
-    """Check if an offer's title contains a tier 1 company name.
-
-    Returns the original company name, or ``None``.
-    """
-    from whatsapp_bot.tier1 import find_tier1_match
-
-    title = offer.get("title") or ""
-    return find_tier1_match(title, entries)
-
-
-def _find_tier1_offer_desc_match(
-    offer: dict,
-    entries: list[SearchEntry],
-) -> str | None:
-    """Check if an offer's descriptions mention a tier 1 company.
-
-    Checks both ``little_description`` and ``big_description``.
-    Uses the same URL-stripping and noise filtering as event description matching.
-    """
-    from whatsapp_bot.tier1 import _DESC_NOISE, _URL_RE
-    from whatsapp_bot.utils import normalize
-
-    little = offer.get("little_description") or ""
-    big = offer.get("big_description") or ""
-    combined = f"{little} {big}".strip()
-
-    if not combined or not entries:
-        return None
-
-    # Strip URLs and normalize
-    norm_desc = normalize(_URL_RE.sub("", combined))
-
-    for entry in entries:
-        if entry.term in _DESC_NOISE:
-            continue
-        if entry.pattern.search(norm_desc):
-            return entry.company
-
-    return None
 
 
 async def _notify_tier1_offer(
@@ -386,7 +367,7 @@ async def _notify_tier1_offer(
     offer: dict,
     matched_company: str,
     *,
-    match_type: str = "title",
+    employer: dict,
 ) -> int:
     """Notify all linked users about a tier 1 company offer.
 
@@ -405,11 +386,13 @@ async def _notify_tier1_offer(
     url = offer_url(offer)
     link = f"\n{url}" if url else ""
 
-    where = "title" if match_type == "title" else "description"
+    if employer.get("status") != "supported" or not employer.get("hiring_company"):
+        raise ValueError("Tier 1 offer notification requires a supported hiring employer")
     notification = (
-        f"*Tier 1 company offer detected ({where} match)*\n\n"
+        f"*Tier 1 employer offer*\n\n"
         f"*{title}*\n"
-        f"Company: {matched_company}\n"
+        f"Hiring company: {employer['hiring_company']}\n"
+        f"Tier 1 company: {matched_company}\n"
         f"Type: {contract}\n"
         f"Location: {location}\n"
         f"Validity: {validity}"
@@ -452,6 +435,7 @@ async def run_offers_scraper(
     group_jid: str,
     interval_seconds: int,
     seen_offers_path: str,
+    employer_resolver: EmployerResolver | None = None,
     filters_path: str | None = None,
     offer_filter: OfferFilter | None = None,
     tier1_entries: list[SearchEntry] | None = None,
@@ -462,7 +446,7 @@ async def run_offers_scraper(
     seen = SeenOffers(seen_offers_path)
     first_run = seen.is_empty
 
-    tier1_enabled = bool(tier1_entries and user_tokens)
+    tier1_enabled = bool(tier1_entries)
 
     logger.info(
         "Offers scraper started: campus=%d, group=%s, interval=%ds, tier1=%s, filter=%s",
@@ -484,6 +468,7 @@ async def run_offers_scraper(
                 group_jid=group_jid,
                 first_run=first_run,
                 offer_filter=offer_filter,
+                employer_resolver=employer_resolver,
                 filters_path=filters_path,
                 tier1_entries=tier1_entries if tier1_enabled else None,
                 user_tokens=user_tokens,
@@ -507,6 +492,7 @@ async def _poll_and_post_offers(
     campus_id: int,
     group_jid: str,
     first_run: bool,
+    employer_resolver: EmployerResolver | None = None,
     filters_path: str | None = None,
     offer_filter: OfferFilter | None = None,
     tier1_entries: list[SearchEntry] | None = None,
@@ -566,60 +552,26 @@ async def _poll_and_post_offers(
     for offer in new_offers:
         offer_id: int = offer["id"]
         offer_title = offer.get("title") or "Untitled Offer"
-        msg = format_offer(offer)
-
-        # --- Tier 1 matching (notify only — offers have no registration) ---
-        title_match: str | None = None
-        desc_match: str | None = None
-
-        if tier1_entries and user_tokens:
-            title_match = _find_tier1_offer_match(offer, tier1_entries)
-            if title_match is None:
-                desc_match = _find_tier1_offer_desc_match(offer, tier1_entries)
-
-        if title_match is not None:
-            assert user_tokens is not None  # set together with tier1_entries
-            logger.info(
-                "Tier 1 TITLE match for offer %d '%s' -> %s — notifying users",
-                offer_id, offer_title, title_match,
-            )
-            notified = await _notify_tier1_offer(
-                user_tokens,
-                evolution_client,
-                instance,
-                offer,
-                title_match,
-                match_type="title",
-            )
-            tier1_note = (
-                f"\n\n_Tier 1 company ({title_match}) — "
-                f"{notified} user(s) notified_"
-            )
-            await evolution_client.send_text(instance, group_jid, msg + tier1_note)
-
-        elif desc_match is not None:
-            assert user_tokens is not None  # set together with tier1_entries
-            logger.info(
-                "Tier 1 DESC match for offer %d '%s' -> %s — notifying users",
-                offer_id, offer_title, desc_match,
-            )
-            notified = await _notify_tier1_offer(
-                user_tokens,
-                evolution_client,
-                instance,
-                offer,
-                desc_match,
-                match_type="description",
-            )
-            desc_note = (
-                f"\n\n_Tier 1 company ({desc_match}) mentioned in description "
-                f"— {notified} user(s) notified_"
-            )
-            await evolution_client.send_text(instance, group_jid, msg + desc_note)
-
-        else:
-            # Normal offer — post as plain text (no poll, offers are informational)
-            await evolution_client.send_text(instance, group_jid, msg)
+        employer = None
+        if employer_resolver is not None:
+            try:
+                employer = await employer_resolver.resolve(offer)
+            except EmployerResolutionError as exc:
+                logger.warning("Offer %d employer extraction failed; leaving unseen for retry: %s", offer_id, exc)
+                continue
+        msg = format_offer(offer, employer=employer)
+        # No title/description keyword fallback. Only a resolved hiring identity can match.
+        matched_company = match_tier1_employer(employer, tier1_entries or [])
+        if matched_company is not None:
+            assert employer is not None  # identity lookup rejects missing/unresolved extraction
+            notified = 0
+            if user_tokens is not None:
+                notified = await _notify_tier1_offer(
+                    user_tokens, evolution_client, instance, offer, matched_company,
+                    employer=employer,
+                )
+            msg += f"\n\n_Tier 1 company: {matched_company}. Hiring employer; {notified} user(s) notified_"
+        await evolution_client.send_text(instance, group_jid, msg)
 
         seen.mark_seen(offer_id)
         logger.info("Posted offer %d: %s", offer_id, offer_title)

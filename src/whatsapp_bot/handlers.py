@@ -5,6 +5,7 @@ from whatsapp_bot.security import RateLimiter, redact_phone
 
 if TYPE_CHECKING:
     from whatsapp_bot.button_events import ButtonEventMap
+    from whatsapp_bot.employers import EmployerResolver
     from whatsapp_bot.evolution import EvolutionClient
     from whatsapp_bot.ft_client import FtAPIError, FtClient
     from whatsapp_bot.oauth import OAuthManager
@@ -28,6 +29,7 @@ def _is_join_trigger(text: str) -> bool:
 # Module-level state injected by main.py via configure_ft() / configure_oauth()
 _ft_client: "FtClient | None" = None
 _ft_campus_id: int = 1
+_employer_resolver: "EmployerResolver | None" = None
 
 _oauth_manager: "OAuthManager | None" = None
 _user_tokens: "UserTokenStore | None" = None
@@ -41,11 +43,12 @@ _offers_cmd_limiter = RateLimiter(max_requests=5, window_seconds=60)
 _registration_limiter = RateLimiter(max_requests=10, window_seconds=60)
 
 
-def configure_ft(ft_client: "FtClient", campus_id: int) -> None:
+def configure_ft(ft_client: "FtClient", campus_id: int, *, employer_resolver: "EmployerResolver | None" = None) -> None:
     """Inject the 42 API client so handlers can serve /events."""
-    global _ft_client, _ft_campus_id
+    global _ft_client, _ft_campus_id, _employer_resolver
     _ft_client = ft_client
     _ft_campus_id = campus_id
+    _employer_resolver = employer_resolver
     logger.info("Handlers configured with 42 API client (campus %d)", campus_id)
 
 
@@ -367,7 +370,7 @@ async def handle_messages_upsert(
                 try:
                     reply = await get_upcoming_offers(
                         _ft_client, _ft_campus_id, offer_filter=offer_filter,
-                        filters_path=_filters_path,
+                        filters_path=_filters_path, employer_resolver=_employer_resolver,
                     )
                 except Exception:
                     logger.exception("Failed to fetch offers for /offers command")

@@ -36,7 +36,8 @@ async def test_private_tier1_notification_uses_same_student_url():
     users = MagicMock()
     users.items.return_value = [("12345", object())]
     client = AsyncMock()
-    assert await _notify_tier1_offer(users, client, "default", OFFER, "Acme") == 1
+    employer = {"status": "supported", "hiring_company": "Acme", "relationship": "direct_employer"}
+    assert await _notify_tier1_offer(users, client, "default", OFFER, "Acme", employer=employer) == 1
     message = client.send_text.await_args.args[2]
     assert URL in message
     assert "meta.intra" not in message

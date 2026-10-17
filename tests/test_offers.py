@@ -7,6 +7,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
+from whatsapp_bot.employers import match_tier1_employer
 from whatsapp_bot.filters import (
     OfferFilter,
     format_offers_help,
@@ -15,8 +16,6 @@ from whatsapp_bot.filters import (
 )
 from whatsapp_bot.offers import (
     SeenOffers,
-    _find_tier1_offer_desc_match,
-    _find_tier1_offer_match,
     _notify_tier1_offer,
     _poll_and_post_offers,
     format_offer,
@@ -503,28 +502,26 @@ class TestLoadOffersScraperFilter:
 # Tier 1 matching for offers
 # -----------------------------------------------------------------------
 
-class TestTier1OfferMatching:
-    def test_title_match(self, tier1_entries):
-        result = _find_tier1_offer_match(GOOGLE_OFFER, tier1_entries)
-        assert result is not None
-        assert "Google" in result
+def _employer(name):
+    return {"status": "supported", "hiring_company": name, "relationship": "direct_employer", "evidence": []}
 
-    def test_title_no_match(self, tier1_entries):
-        result = _find_tier1_offer_match(NORMAL_OFFER, tier1_entries)
-        assert result is None
 
-    def test_desc_match(self, tier1_entries):
-        result = _find_tier1_offer_desc_match(THALES_DESC_OFFER, tier1_entries)
-        assert result is not None
-        assert "Thales" in result
+class TestTier1EmployerMatching:
+    def test_resolved_google(self, tier1_entries):
+        result = match_tier1_employer(_employer("Google"), tier1_entries)
+        assert result is not None and "Google" in result
 
-    def test_desc_no_match(self, tier1_entries):
-        result = _find_tier1_offer_desc_match(NORMAL_OFFER, tier1_entries)
-        assert result is None
+    def test_exact_identity_not_substring(self, tier1_entries):
+        assert match_tier1_employer(_employer("Google tools consulting"), tier1_entries) is None
 
-    def test_empty_entries(self):
-        result = _find_tier1_offer_match(GOOGLE_OFFER, [])
-        assert result is None
+    def test_resolved_thales(self, tier1_entries):
+        assert match_tier1_employer(_employer("Thales"), tier1_entries) == "Thales"
+
+    def test_unknown_employer(self, tier1_entries):
+        assert match_tier1_employer({"status": "unknown", "hiring_company": None}, tier1_entries) is None
+
+    def test_empty_roster(self):
+        assert match_tier1_employer(_employer("Google"), []) is None
 
 
 # -----------------------------------------------------------------------
@@ -541,7 +538,7 @@ class TestNotifyTier1Offer:
             "test",
             GOOGLE_OFFER,
             "Alphabet / Google",
-            match_type="title",
+            employer=_employer("Google"),
         )
         assert notified == 2
         assert mock_evolution_client.send_text.call_count == 2
@@ -549,9 +546,9 @@ class TestNotifyTier1Offer:
         # Check notification content
         first_call = mock_evolution_client.send_text.call_args_list[0]
         msg = first_call[0][2]
-        assert "Tier 1 company offer detected" in msg
+        assert "Tier 1 employer offer" in msg
         assert "Google" in msg
-        assert "title match" in msg
+        assert "Hiring company: Google" in msg
 
     async def test_desc_match_notification(
         self, mock_evolution_client, user_tokens_store
@@ -562,12 +559,12 @@ class TestNotifyTier1Offer:
             "test",
             THALES_DESC_OFFER,
             "Thales",
-            match_type="description",
+            employer=_employer("Thales"),
         )
         assert notified == 2
         first_call = mock_evolution_client.send_text.call_args_list[0]
         msg = first_call[0][2]
-        assert "description match" in msg
+        assert "Hiring company: Thales" in msg
 
     async def test_no_users_returns_zero(self, mock_evolution_client, tmp_path):
         from whatsapp_bot.user_tokens import UserTokenStore
@@ -579,6 +576,7 @@ class TestNotifyTier1Offer:
             "test",
             GOOGLE_OFFER,
             "Google",
+            employer=_employer("Google"),
         )
         assert notified == 0
         mock_evolution_client.send_text.assert_not_called()
@@ -695,6 +693,7 @@ class TestPollAndPostOffers:
             campus_id=1,
             group_jid="group@g.us",
             first_run=False,
+            employer_resolver=AsyncMock(resolve=AsyncMock(return_value=_employer("Google"))),
             tier1_entries=tier1_entries,
             user_tokens=user_tokens_store,
         )
@@ -736,6 +735,7 @@ class TestPollAndPostOffers:
             campus_id=1,
             group_jid="group@g.us",
             first_run=False,
+            employer_resolver=AsyncMock(resolve=AsyncMock(return_value=_employer("Thales"))),
             tier1_entries=tier1_entries,
             user_tokens=user_tokens_store,
         )
@@ -749,7 +749,7 @@ class TestPollAndPostOffers:
             if c[0][1] == "group@g.us"
         ]
         group_msg = group_calls[0][0][2]
-        assert "description" in group_msg.lower()
+        assert "Hiring company: Thales" in group_msg
         assert "Thales" in group_msg
 
     async def test_no_new_offers_does_nothing(
@@ -799,6 +799,7 @@ class TestPollAndPostOffers:
             campus_id=1,
             group_jid="group@g.us",
             first_run=False,
+            employer_resolver=AsyncMock(resolve=AsyncMock(return_value=_employer("Google"))),
             tier1_entries=tier1_entries,
             user_tokens=user_tokens_store,
         )

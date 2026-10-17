@@ -18,6 +18,8 @@ from whatsapp_bot.evolution import EvolutionClient
 from whatsapp_bot.handlers import handle_webhook
 from whatsapp_bot.security import RateLimiter, redact_phone
 
+from .employers import EmployerResolver
+
 _LOG_DIR = Path("logs")
 _LOG_DIR.mkdir(exist_ok=True, mode=0o700)
 
@@ -119,6 +121,7 @@ async def lifespan(app: FastAPI):
     ft_client = None
     scraper_task = None
     offers_scraper_task = None
+    employer_resolver = None
     oauth_manager = None
     has_ft_credentials = settings.ft_client_id and settings.ft_client_secret
 
@@ -133,7 +136,14 @@ async def lifespan(app: FastAPI):
         # Enable /events in handlers
         from whatsapp_bot.handlers import configure_ft
 
-        configure_ft(ft_client, settings.ft_campus_id)
+        if settings.gemini_api_key:
+            employer_resolver = EmployerResolver(
+                settings.gemini_api_key, model=settings.employer_model,
+                cache_path=settings.employer_cache_path,
+            )
+        else:
+            logger.warning("Employer extractor not configured: offers remain unverified, Tier 1 offer alerts disabled")
+        configure_ft(ft_client, settings.ft_campus_id, employer_resolver=employer_resolver)
 
         # --- OAuth + Registration ---
         from whatsapp_bot.button_events import ButtonEventMap
@@ -232,6 +242,7 @@ async def lifespan(app: FastAPI):
                         group_jid=settings.whatsapp_group_jid,
                         interval_seconds=settings.offers_scraper_interval_seconds,
                         seen_offers_path=settings.seen_offers_path,
+                        employer_resolver=employer_resolver,
                         filters_path="config/filters.toml",
                         offer_filter=offers_filter,
                         tier1_entries=tier1_entries or None,
@@ -265,6 +276,9 @@ async def lifespan(app: FastAPI):
     if oauth_manager is not None:
         await oauth_manager.close()
         logger.info("OAuth manager closed")
+
+    if employer_resolver is not None:
+        await employer_resolver.close()
 
     if ft_client is not None:
         await ft_client.close()

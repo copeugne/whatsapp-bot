@@ -1,0 +1,6 @@
+# Exact reviewed hiring-company identities, mapped to canonical Tier 1 roster entries.
+# Applied only after semantic extraction, never to the ad text.
+[aliases]
+"BCG X" = "Boston Consulting Group (BCG)"
+"BCG X Delivery" = "Boston Consulting Group (BCG)"
+"BCG X Delivery Casablanca" = "Boston Consulting Group (BCG)"

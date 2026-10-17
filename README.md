@@ -109,6 +109,14 @@ The bot polls for new content, filters it before publication, and keeps track of
 
 Company matching can trigger additional Tier 1 notifications. Event-title Tier 1 matches can also auto-register linked users when the required OAuth components are configured. Review [`config/tier1_companies.txt`](config/tier1_companies.txt) before enabling that workflow. Job offers are informational and never auto-register users.
 
+**Job offers use semantic hiring-employer extraction**, not title or description keyword matches. Gemini reads numbered passages from the offer and returns the hiring company, its employment relationship and source-passage IDs. Code retrieves those passages verbatim, validates the response and performs an exact lookup against the Tier 1 roster and [reviewed employer aliases](config/employer_aliases.toml). It does not infer hiring relationships using regexes or let the model decide Tier 1. Tool vendors, partners, accelerators and former employers are not the hiring company. Recruitment agencies hiring for clients are distinguished from consultancies employing their own staff.
+
+Polling and `/offers` share a persistent cache, keyed by visible source text, offer ID, model, prompt and schema. Identified employers expire after seven days; unknowns after one hour. Model requests are serialized and paced. Unknown or unnamed employers never trigger Tier 1 alerts. Provider or validation failures leave background offers unseen for a later retry; on-demand replies explicitly show extraction unavailable. Without a Gemini key, offers still post with an unverified employer and no Tier 1 offer alert. Existing seen IDs are preserved, so this does not replay old offers.
+
+**Events retain their separate matching policy.** Event description matches require local organization context, such as a speaker, organizer or partner, rather than employer identity. Canonical company names in event titles remain eligible with tool/topic guards; event-description matches notify only and do not auto-register. This event matching is conservative and deterministic, and can miss unsupported phrasings.
+
+Employer extraction is probabilistic. Source citations establish provenance, not the correctness of a hiring relationship. The agent-reviewed development evaluation is documented in [the work ledger](reports/recovery.md), with its remaining uncertainty; it is not a general accuracy guarantee.
+
 ## Features
 
 | Capability | What it does |
@@ -118,7 +126,7 @@ Company matching can trigger additional Tier 1 notifications. Event-title Tier 1
 | **On-demand browsing** | Answers `/events` and `/offers`, with kind, contract and keyword options |
 | **Event exclusions** | Blocks unwanted event-title keywords through admin commands |
 | **Company exclusions** | Blocks company mentions across events and offers |
-| **Tier 1 matching** | Detects configured companies for additional notifications and event workflows |
+| **Tier 1 matching** | Uses resolved hiring employers for offer alerts; separate organization matching for events |
 | **42 account linking** | Uses OAuth for event registration and cancellation |
 | **Optional summaries** | Uses Gemini to condense event descriptions for WhatsApp polls |
 | **Persistent state** | Preserves processed items, event mappings and user tokens across restarts |
@@ -175,7 +183,7 @@ Changes do not cancel a cycle already in progress, retract messages or undo regi
 
 ## Configuration
 
-Start with the environment templates and the two filter files:
+Start with the environment templates and configuration files:
 
 | Setting | Purpose |
 | --- | --- |
@@ -185,9 +193,12 @@ Start with the environment templates and the two filter files:
 | `BOT_ADMIN_WHATSAPP_NUMBER` | Restrict filter administration |
 | `BOT_WEBHOOK_SECRET` | Authenticate Evolution webhook deliveries |
 | `BOT_TOKEN_ENCRYPTION_KEY` | Encrypt stored user OAuth tokens |
-| `BOT_GEMINI_API_KEY` | Enable optional event summaries |
+| `BOT_GEMINI_API_KEY` | Enable semantic offer-employer extraction and optional event summaries |
+| `BOT_EMPLOYER_MODEL` | Extractor model ID (default `gemini-3.5-flash-lite`) |
+| `BOT_EMPLOYER_CACHE_PATH` | Shared persistent employer cache (default `data/employers.json`) |
 | [`config/filters.toml`](config/filters.toml) | Event, offer and shared company exclusions |
 | [`config/tier1_companies.txt`](config/tier1_companies.txt) | Company names used for Tier 1 detection |
+| [`config/employer_aliases.toml`](config/employer_aliases.toml) | Exact reviewed employer identities mapped to roster names |
 
 See [`.env.example`](.env.example) and [`evolution.env.example`](evolution.env.example) for polling intervals, storage paths and other settings.
 
@@ -196,7 +207,7 @@ See [`.env.example`](.env.example) and [`evolution.env.example`](evolution.env.e
 <details>
 <summary><strong>Do I need Gemini?</strong></summary>
 
-No. Gemini summaries are optional. Without a configured key, the bot uses its standard description formatting and truncation.
+Not for basic feeds, browsing or event registration. Event summaries are optional and otherwise use standard formatting and truncation. Semantic employer identification and Tier 1 **offer** alerts require a Gemini key. Without one, offers explicitly show an unverified hiring company; there is no keyword fallback.
 
 </details>
 

@@ -1,6 +1,6 @@
 import re
 from functools import lru_cache
-from typing import Any
+from typing import Any, cast
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
 
     evolution_api_url: str
     evolution_api_key: str
-    webhook_host: str = "0.0.0.0"
+    webhook_host: str = "0.0.0.0"  # noqa: S104 - intentional authenticated container listener
     webhook_port: int = 8000
     instance_name: str = "default"
 
@@ -51,6 +51,8 @@ class Settings(BaseSettings):
 
     # Gemini API (optional — event description summarization)
     gemini_api_key: str = ""
+    employer_model: str = "gemini-3.5-flash-lite"
+    employer_cache_path: str = "data/employers.json"
 
     # Security
     webhook_secret: str = ""  # shared secret for webhook authentication
@@ -65,7 +67,7 @@ def get_settings() -> Settings:
     than at import time, which makes testing easier (no need to set env
     vars before importing any ``whatsapp_bot`` module).
     """
-    return Settings()  # type: ignore[call-arg]
+    return Settings()  # pyright: ignore[reportCallIssue] - required values come from env
 
 
 class _SettingsProxy:
@@ -82,4 +84,4 @@ class _SettingsProxy:
         return repr(get_settings())
 
 
-settings: Settings = _SettingsProxy()  # type: ignore[assignment]
+settings: Settings = cast(Settings, _SettingsProxy())

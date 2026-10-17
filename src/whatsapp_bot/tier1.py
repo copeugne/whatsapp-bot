@@ -11,6 +11,7 @@ Two-tier matching:
 from __future__ import annotations
 
 import base64
+import html
 import logging
 import re
 from dataclasses import dataclass
@@ -19,7 +20,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from whatsapp_bot.security import redact_phone as _redact
-
 from whatsapp_bot.utils import format_dt, normalize
 
 if TYPE_CHECKING:
@@ -232,13 +232,7 @@ def find_tier1_match(event_name: str, entries: list[SearchEntry]) -> str | None:
     if not event_name or not entries:
         return None
 
-    norm_title = _normalize(event_name)
-
-    for entry in entries:
-        if entry.pattern.search(norm_title):
-            return entry.company
-
-    return None
+    return find_tier1_text_match(event_name, entries)
 
 
 _URL_RE = re.compile(r"https?://\S+|www\.\S+", re.IGNORECASE)
@@ -254,6 +248,86 @@ def _strip_urls(text: str) -> str:
     noise entries.
     """
     return _URL_RE.sub("", text)
+
+
+# These brands name both a company and a commonly used product. A bare
+# product name must not trigger auto-registration or company notifications.
+_PRODUCT_ALIASES: frozenset[str] = frozenset({"cursor"})
+
+# Match context immediately around the candidate, not arbitrary words elsewhere
+# in the description. In particular, engineers at Galadrim using Cursor are
+# not engineers at Anysphere.
+_ORG_BEFORE = re.compile(
+    r"(?:\b(?:chez|joined)|"
+    r"\b(?:work|working|works|job|jobs|career|careers|internship|stage|emploi|poste)"
+    r"(?:\s+\w+){0,7}\s+(?:at|chez)|"
+    r"\b(?:engineers?|ingenieurs?|teams?|equipes?|representatives?|representants?|"
+    r"speakers?|intervenants?|recruiters?|recruteurs?)\s+(?:from|at|de|du|chez)|"
+    r"\b(?:organized|organised|hosted|sponsored|presented)\s+(?:by|with)|"
+    r"\b(?:hackathons?|challenges?|conferences?|presentations?|talks?|ateliers?|evenements?)\s+(?:by|par|avec|with)|"
+    r"\b(?:organise|organisee|sponsorise|sponsorisee|presente|presentee)\s+par|"
+    r"\b(?:company|entreprise|employer|employeur|sponsor|partenaire)|"
+    r"\bpartners?(?:\s+\w+){0,6})\s+$"
+)
+_ORG_AFTER = re.compile(
+    r"^\s+(?:is\s+(?:hiring|recruiting)|recrute|recrutent|embauche|"
+    r"engineers?|ingenieurs?|representatives?|representants?|recruiters?|recruteurs?|"
+    r"organise|organizes|organises|sponsors)\b"
+)
+_TOOL_CONTEXT = re.compile(
+    r"\b(?:tools?|outils?|stack|tooling|skills|competences|"
+    r"use|uses|using|utilise|utilisent|utilisons|utiliser|utilisation|"
+    r"maitrise|maitriser|proficiency|experience with|experience using|"
+    r"backend|frontend|databases?|bdd|bases de donnees|technologies|"
+    r"mockups|maquettes|deployed|deploiement|apis?|llms?)\b"
+)
+_TOPIC_BEFORE = re.compile(
+    r"\b(?:about|sur|learn|learning|apprendre|tutorial|tutoriel|"
+    r"introduction to|initiation a|formation a|formation sur|look at)\s+$"
+)
+
+
+_EVENT_SUBJECT_AFTER = re.compile(
+    r"^\s+(?:\w+\s+){0,2}(?:training|workshop|conference|presentation)\b"
+)
+
+
+def find_tier1_text_match(
+    text: str,
+    entries: list[SearchEntry],
+    *,
+    description: bool = False,
+    allow_event_subject: bool = False,
+) -> str | None:
+    """Match company involvement, not a tool/skill/topic or a URL reference.
+
+    Descriptions and ambiguous product aliases require local organization
+    context. Event descriptions can also identify a company-led event by its
+    leading subject, but generic tool/topic titles do not establish involvement.
+    This is a deterministic contextual guard, not verified employer identity.
+    """
+    # Remove markup before normalizing so hrefs, attributes and HTML entities
+    # cannot create company evidence. Keep visible anchor text.
+    visible = html.unescape(re.sub(r"<[^>]*>", " ", text))
+    normalized = _normalize(_strip_urls(visible))
+    for entry in entries:
+        requires_context = description or entry.term in _PRODUCT_ALIASES
+        for match in entry.pattern.finditer(normalized):
+            before = normalized[max(0, match.start() - 160):match.start()]
+            after = normalized[match.end():match.end() + 100]
+            organization = bool(_ORG_BEFORE.search(before) or _ORG_AFTER.search(after))
+            event_subject = (
+                allow_event_subject and match.start() == 0
+                and entry.term not in _PRODUCT_ALIASES
+                and entry.term not in _DESC_NOISE
+                and bool(_EVENT_SUBJECT_AFTER.search(after))
+            )
+            if organization or event_subject:
+                return entry.company
+            if requires_context or _TOOL_CONTEXT.search(before) or _TOPIC_BEFORE.search(before):
+                continue
+            return entry.company
+    return None
 
 
 def find_tier1_description_match(
@@ -281,18 +355,9 @@ def find_tier1_description_match(
     if kind not in _DESC_TARGET_KINDS:
         return None
 
-    # Strip URLs before normalizing — company names in URLs are not
-    # genuine mentions (e.g. teams.microsoft.com, zoom.us, meta.intra.42.fr)
-    norm_desc = _normalize(_strip_urls(description))
-
-    for entry in entries:
-        # Skip terms that are too noisy in descriptions
-        if entry.term in _DESC_NOISE:
-            continue
-        if entry.pattern.search(norm_desc):
-            return entry.company
-
-    return None
+    return find_tier1_text_match(
+        description, entries, description=True, allow_event_subject=True,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -428,9 +493,9 @@ def ics_to_base64(ics_content: str) -> str:
 
 
 async def auto_register_all_users(
-    oauth_manager: "OAuthManager",
-    user_tokens: "UserTokenStore",
-    evolution_client: "EvolutionClient",
+    oauth_manager: OAuthManager,
+    user_tokens: UserTokenStore,
+    evolution_client: EvolutionClient,
     instance: str,
     event: dict,
     matched_company: str,
@@ -540,8 +605,8 @@ async def auto_register_all_users(
 
 
 async def notify_description_match(
-    user_tokens: "UserTokenStore",
-    evolution_client: "EvolutionClient",
+    user_tokens: UserTokenStore,
+    evolution_client: EvolutionClient,
     instance: str,
     event: dict,
     matched_company: str,
